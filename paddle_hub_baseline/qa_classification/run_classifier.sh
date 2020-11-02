@@ -3,7 +3,7 @@ export CUDA_VISIBLE_DEVICES=0
 
 CKPT_DIR="./ckpt_qa"
 
-python -u classifier.py \
+python -u classifier_demo.py \
                    --batch_size=24 \
                    --use_gpu=True \
                    --checkpoint_dir=${CKPT_DIR} \
