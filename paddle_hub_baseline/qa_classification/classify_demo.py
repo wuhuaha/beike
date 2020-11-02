@@ -5,6 +5,7 @@ import paddlehub as hub
 from paddlehub.dataset.base_nlp_dataset import BaseNLPDataset
 import csv
 import io
+import numpy as np
 
 #读取test数据集 id id
 def GetFileRecord(input_file):
@@ -119,8 +120,6 @@ cls_task = hub.TextClassifierTask(
 run_states = cls_task.finetune_and_eval()
 
 #预测
-
-（data,id) = GetFileRecord('./classify/classify_test.tsv')
-
+(data,id) = GetFileRecord('./classify/classify_test.tsv')
 result = cls_task.predict(data=data, return_result=True)
-
+#存结果
