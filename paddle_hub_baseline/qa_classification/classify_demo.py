@@ -6,6 +6,7 @@ from paddlehub.dataset.base_nlp_dataset import BaseNLPDataset
 import csv
 import io
 import numpy as np
+import pandas as pd
 
 #读取test数据集 id id
 def GetFileRecord(input_file):
@@ -50,7 +51,7 @@ dataset_dir = './classify'
 dataset_name = dataset_dir.split('/')[-1]
 
 # 加载语义模型，可更换其他语义模型比如bert、robert等
-module = hub.Module(name="ernie")
+module = hub.Module(name="roberta_wwm_ext_chinese_L-24_H-1024_A-16")
 inputs, outputs, program = module.context(
         trainable=True, max_seq_len=args.max_seq_len)
 metrics_choices = ["acc"]
@@ -117,9 +118,14 @@ cls_task = hub.TextClassifierTask(
         metrics_choices=metrics_choices
         )
 # 开始训练
-run_states = cls_task.finetune_and_eval()
+#run_states = cls_task.finetune_and_eval()
 
 #预测
 (data,id) = GetFileRecord('./classify/classify_test.tsv')
 result = cls_task.predict(data=data, return_result=True)
 #存结果
+submit = pd.read_csv('./classify/result.tsv',sep='\t',header=None)
+for i in range(len(submit)) :
+  submit.iloc[i,2] = result[i]
+submit.to_csv('./classify/submit.tsv',sep='\t',header=None, index=False)
+print(submit.head()) 
