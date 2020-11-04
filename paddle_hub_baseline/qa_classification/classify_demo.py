@@ -51,7 +51,8 @@ dataset_dir = './classify'
 dataset_name = dataset_dir.split('/')[-1]
 
 # 加载语义模型，可更换其他语义模型比如bert、robert等
-module = hub.Module(name="roberta_wwm_ext_chinese_L-24_H-1024_A-16")
+#module = hub.Module(name="roberta_wwm_ext_chinese_L-24_H-1024_A-16")
+module = hub.Module(name="ernie")
 inputs, outputs, program = module.context(
         trainable=True, max_seq_len=args.max_seq_len)
 metrics_choices = ["acc"]
@@ -111,14 +112,15 @@ feed_list = [
 # 训练任务
 cls_task = hub.TextClassifierTask(
         data_reader=reader,
-        feature=pooled_output,
+        token_feature=sequence_output,
         feed_list=feed_list,
         num_classes=dataset.num_labels,
         config=config,
-        metrics_choices=metrics_choices
+        metrics_choices=metrics_choices,
+	network='lstm'
         )
 # 开始训练
-#run_states = cls_task.finetune_and_eval()
+run_states = cls_task.finetune_and_eval()
 
 #预测
 (data,id) = GetFileRecord('./classify/classify_test.tsv')
