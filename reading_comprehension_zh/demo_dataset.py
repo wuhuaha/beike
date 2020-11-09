@@ -93,7 +93,6 @@ class DuReader(BaseNLPDataset):
             for paragraph in entry["paragraphs"]:
                 paragraph_text = paragraph["context"]
                 context = _tokenize_chinese_chars(paragraph_text)
-                #print(context)
 
                 doc_tokens = []
                 char_to_word_offset = []
@@ -105,14 +104,10 @@ class DuReader(BaseNLPDataset):
                         if prev_is_whitespace:
                             doc_tokens.append(c)
                         else:
-                            print(c,doc_tokens) 
                             doc_tokens[-1] += c
-                            print(doc_tokens) 
                         prev_is_whitespace = False
                     if c != SPIECE_UNDERLINE:
                         char_to_word_offset.append(len(doc_tokens) - 1)
-                #print(doc_tokens)
-                #print(char_to_word_offset)
 
                 for qa in paragraph["qas"]:
                     qas_id = qa["id"]
